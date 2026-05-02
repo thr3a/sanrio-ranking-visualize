@@ -1,5 +1,5 @@
-# ts実行
+# サンリオ大賞ひすとりー
 
-```bash
-node --import tsx --env-file .env --watch ./src/scripts/hello.ts
-```
+https://sanrio-ranking.turai.work
+
+![picture 1](https://sanrio-ranking.turai.work/ogp.png)  
