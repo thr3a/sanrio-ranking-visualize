@@ -1,54 +1,30 @@
 import type { EChartsOption, SeriesOption } from 'echarts';
 import ReactECharts from 'echarts-for-react';
+import { rankingData } from './data';
 
-const vegetables = [
-  'トマト',
-  'キュウリ',
-  'ナス',
-  'ピーマン',
-  'じゃがいも',
-  'たまねぎ',
-  'にんじん',
-  'ほうれん草',
-  'キャベツ',
-  'レタス',
-  'ブロッコリー',
-  'かぼちゃ'
-] as const;
-
-const years = ['2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025'];
+const START_YEAR = 2015;
+const END_YEAR = 2025;
 const RANK_COUNT = 10;
 
-const shuffle = <T,>(array: T[]): T[] => {
-  const arr = [...array];
-  let currentIndex = arr.length;
-  while (currentIndex > 0) {
-    const randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-    [arr[currentIndex], arr[randomIndex]] = [arr[randomIndex], arr[currentIndex]];
-  }
-  return arr;
-};
+const filteredData = rankingData.filter(
+  (entry) => entry.year >= START_YEAR && entry.year <= END_YEAR && entry.rank <= RANK_COUNT
+);
+
+const years = Array.from({ length: END_YEAR - START_YEAR + 1 }, (_, i) => String(START_YEAR + i));
+
+const characters = Array.from(new Set(filteredData.map((entry) => entry.character)));
 
 type RankingMap = Map<string, (number | null)[]>;
 
-const generateRankingData = (): RankingMap => {
+const buildRankingMap = (): RankingMap => {
   const map: RankingMap = new Map();
-  for (const veg of vegetables) {
-    map.set(veg, []);
+  for (const character of characters) {
+    const ranks = years.map((y) => {
+      const entry = filteredData.find((e) => e.character === character && String(e.year) === y);
+      return entry ? entry.rank : null;
+    });
+    map.set(character, ranks);
   }
-
-  for (const _ of years) {
-    const shuffled = shuffle([...vegetables]);
-    const selected = shuffled.slice(0, RANK_COUNT);
-
-    for (const veg of vegetables) {
-      const current = map.get(veg) ?? [];
-      const rankIdx = selected.indexOf(veg);
-      map.set(veg, [...current, rankIdx !== -1 ? rankIdx + 1 : null]);
-    }
-  }
-
   return map;
 };
 
@@ -80,11 +56,11 @@ const generateSeriesList = (rankingMap: RankingMap): SeriesOption[] => {
   return seriesList;
 };
 
-const rankingMap = generateRankingData();
+const rankingMap = buildRankingMap();
 
 const option: EChartsOption = {
   title: {
-    text: '人気野菜ランキング推移',
+    text: 'サンリオキャラクター大賞 順位推移',
     left: 'center',
     textStyle: {
       fontSize: 20
