@@ -1,3 +1,4 @@
+import { Box } from '@mantine/core';
 import type { ECharts, EChartsOption, SeriesOption } from 'echarts';
 import ReactECharts from 'echarts-for-react';
 import { rankingData } from './data';
@@ -19,15 +20,20 @@ const CHARACTER_COLORS: Record<string, string> = {
   マロンクリーム: '#e9dbcb'
 };
 
-const START_YEAR = 2015;
+const START_YEAR = 1986;
 const END_YEAR = 2025;
 const RANK_COUNT = 10;
+// 1年あたりの横幅(px)。年数 × この値 + 左右マージンでチャート全体の幅を決める
+const PIXELS_PER_YEAR = 80;
 
 const filteredData = rankingData.filter(
   (entry) => entry.year >= START_YEAR && entry.year <= END_YEAR && entry.rank <= RANK_COUNT
 );
 
 const years = Array.from({ length: END_YEAR - START_YEAR + 1 }, (_, i) => String(START_YEAR + i));
+
+// 横スクロール用のチャート全体の幅(px)。grid の left(30) + right(100) を加味
+const chartWidth = years.length * PIXELS_PER_YEAR + 130;
 
 const characters = Array.from(new Set(filteredData.map((entry) => entry.character)));
 
@@ -80,25 +86,19 @@ const generateSeriesList = (rankingMap: RankingMap): SeriesOption[] => {
 const rankingMap = buildRankingMap();
 
 const option: EChartsOption = {
-  title: {
-    text: 'サンリオキャラクター大賞 順位推移グラフ',
-    left: 'center',
-    textStyle: {
-      fontSize: 20
-    }
-  },
   tooltip: {
     trigger: 'item'
   },
   grid: {
     left: 30,
     right: 100,
-    bottom: 60,
-    top: 90,
+    bottom: 30,
+    top: 60,
     containLabel: true
   },
   xAxis: {
     type: 'category',
+    position: 'top',
     splitLine: {
       show: true
     },
@@ -168,7 +168,16 @@ const handleChartReady = (chart: ECharts) => {
 
 const BumpChart = () => {
   // 685px=全部で10位なので9間隔,9*5=45px
-  return <ReactECharts option={option} style={{ height: '685px', width: '100%' }} onChartReady={handleChartReady} />;
+  // 全年(40年)を表示するため、親要素を overflow-x: auto で横スクロール可能にする
+  return (
+    <Box style={{ overflowX: 'auto', width: '100%' }}>
+      <ReactECharts
+        option={option}
+        style={{ height: '685px', width: `${chartWidth}px` }}
+        onChartReady={handleChartReady}
+      />
+    </Box>
+  );
 };
 
 export default BumpChart;
