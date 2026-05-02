@@ -92,7 +92,7 @@ const option: EChartsOption = {
   grid: {
     left: 30,
     right: 100,
-    bottom: 30,
+    bottom: 80,
     top: 60,
     containLabel: true
   },

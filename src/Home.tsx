@@ -4,7 +4,7 @@ import BumpChart from './BumpChart';
 const Home = () => {
   return (
     <Container maw={1400} py='md'>
-      <Paper mb={'lg'}>
+      <Paper>
         <Title c={'#333'} order={1}>
           サンリオキャラクター大賞 順位推移グラフ
         </Title>
