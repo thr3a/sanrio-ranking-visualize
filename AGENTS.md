@@ -1,10 +1,28 @@
+サンリオキャラクター大賞の1〜10位までのランキングをBump Chart（順位推移グラフ）で可視化するサイト
+
 # 1. 全体方針・コミュニケーション
 
 - ユーザーは日本人です。コード内コメント・最終出力メッセージ・ユーザーへの質問は日本語でお願いします。
 - 既存のコードコメントは、明示的な指示がない限り変更しない。
 - `src/scripts` 以下の TypeScript コードを実行するときは `node --import tsx ./src/scripts/hello.ts`
-- 指示されるまではAIのモデル名(gpt-4oなど)は勝手に変更しないこと
-- https://deepwiki.com/mantinedev/mantine
+- ランキングのデータは `src/data.ts` にある。かなりファイル容量あるので注意。
+
+```typescript
+// src/data.tsの中身
+export type RankEntry = {
+  character: string;
+  year: number;
+  rank: number;
+};
+
+export const rankingData: RankEntry[] = [
+  {
+    character: 'ザシキブタ',
+    year: 1986,
+    rank: 1
+  },
+```
+
 
 ライブラリ概要
 
@@ -14,6 +32,7 @@
 - Lint: biome v2
 - ルーティング: react-router-dom（`BrowserRouter` + `Routes` + `Route`）を使用。ルート定義は `src/App.tsx`
 - ビルドはvite v8
+- echartsv6とecharts-for-react
 
 # 2. TypeScript / コーディングスタイル
 

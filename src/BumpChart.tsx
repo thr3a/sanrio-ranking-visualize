@@ -1,6 +1,24 @@
+import type { ECharts } from 'echarts';
 import type { EChartsOption, SeriesOption } from 'echarts';
 import ReactECharts from 'echarts-for-react';
 import { rankingData } from './data';
+
+const CHARACTER_COLORS: Record<string, string> = {
+  ハローキティ: '#e6002e',
+  マイメロディ: '#e85292',
+  クロミ: '#595757',
+  シナモロール: '#01b3dd',
+  ポムポムプリン: '#fff471',
+  ポチャッコ: '#ffffff',
+  ハンギョドン: '#83cbd1',
+  タキシードサム: '#0096df',
+  あひるのペックル: '#f7b52c',
+  バッドばつ丸: '#595757',
+  けろけろけろっぴ: '#dadf03',
+  ぐでたま: '#f7b52c',
+  マイスウィートピアノ: '#f9dbe8',
+  マロンクリーム: '#e9dbcb'
+};
 
 const START_YEAR = 2015;
 const END_YEAR = 2025;
@@ -32,18 +50,22 @@ const generateSeriesList = (rankingMap: RankingMap): SeriesOption[] => {
   const seriesList: SeriesOption[] = [];
 
   rankingMap.forEach((data, name) => {
+    const color = CHARACTER_COLORS[name];
     seriesList.push({
       name,
-      symbolSize: 20,
+      symbolSize: 30,
       type: 'line',
-      smooth: true,
+      smooth: false,
+      ...(color ? { color } : {}),
       emphasis: {
         focus: 'series'
       },
-      endLabel: {
+      label: {
         show: true,
-        formatter: '{a}',
-        distance: 20
+        position: 'inside',
+        formatter: '{c}',
+        color: '#333',
+        fontSize: 11
       },
       lineStyle: {
         width: 4
@@ -71,8 +93,8 @@ const option: EChartsOption = {
   },
   grid: {
     left: 30,
-    right: 160,
-    bottom: 30,
+    right: 100,
+    bottom: 60,
     top: 60,
     containLabel: true
   },
@@ -103,8 +125,55 @@ const option: EChartsOption = {
   series: generateSeriesList(rankingMap)
 };
 
+const addNameLabels = (chart: ECharts) => {
+  const graphicElements: object[] = [];
+
+  rankingMap.forEach((data, name) => {
+    const color = CHARACTER_COLORS[name];
+    const lastNonNullIndex = data.reduce<number>((li, v, i) => (v !== null ? i : li), -1);
+    const lastRank = data[lastNonNullIndex];
+
+    if (lastNonNullIndex === -1 || lastRank === null) return;
+
+    const pixel = chart.convertToPixel(
+      { xAxisIndex: 0, yAxisIndex: 0 },
+      [years[lastNonNullIndex], lastRank]
+    );
+    if (!pixel) return;
+
+    graphicElements.push({
+      type: 'text',
+      z: 100,
+      style: {
+        text: name,
+        x: pixel[0],
+        y: pixel[1] + 20,
+        textAlign: 'center',
+        textVerticalAlign: 'top',
+        fill: color ?? '#333',
+        font: '10px sans-serif'
+      }
+    });
+  });
+
+  chart.setOption({ graphic: graphicElements });
+};
+
+const handleChartReady = (chart: ECharts) => {
+  setTimeout(() => {
+    chart.resize();
+    setTimeout(() => addNameLabels(chart), 50);
+  }, 0);
+};
+
 const BumpChart = () => {
-  return <ReactECharts option={option} style={{ height: '640px', width: '100%' }} />;
+  return (
+    <ReactECharts
+      option={option}
+      style={{ height: '640px', width: '100%' }}
+      onChartReady={handleChartReady}
+    />
+  );
 };
 
 export default BumpChart;
