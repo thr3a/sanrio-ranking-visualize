@@ -1,14 +1,12 @@
-import { Container, Title } from '@mantine/core';
+import { Container } from '@mantine/core';
+import BumpChart from './BumpChart';
 
-export default function Home() {
+const Home = () => {
   return (
-    <Container maw={400}>
-      <Title mt={'sm'} order={2}>
-        Mantine Vite template
-      </Title>
-      <Title order={6} mb={'sm'} c={'dimmed'}>
-        Mantine Vite template
-      </Title>
+    <Container maw={1400} py='md'>
+      <BumpChart />
     </Container>
   );
-}
+};
+
+export default Home;
