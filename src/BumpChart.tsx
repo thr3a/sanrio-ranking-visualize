@@ -1,5 +1,4 @@
-import type { ECharts } from 'echarts';
-import type { EChartsOption, SeriesOption } from 'echarts';
+import type { ECharts, EChartsOption, SeriesOption } from 'echarts';
 import ReactECharts from 'echarts-for-react';
 import { rankingData } from './data';
 
@@ -9,7 +8,7 @@ const CHARACTER_COLORS: Record<string, string> = {
   クロミ: '#595757',
   シナモロール: '#01b3dd',
   ポムポムプリン: '#fff471',
-  ポチャッコ: '#ffffff',
+  ポチャッコ: '#F6F7F8',
   ハンギョドン: '#83cbd1',
   タキシードサム: '#0096df',
   あひるのペックル: '#f7b52c',
@@ -115,7 +114,7 @@ const option: EChartsOption = {
     axisLabel: {
       margin: 30,
       fontSize: 16,
-      formatter: '#{value}'
+      formatter: '{value}位'
     },
     inverse: true,
     interval: 1,
@@ -135,10 +134,7 @@ const addNameLabels = (chart: ECharts) => {
 
     if (lastNonNullIndex === -1 || lastRank === null) return;
 
-    const pixel = chart.convertToPixel(
-      { xAxisIndex: 0, yAxisIndex: 0 },
-      [years[lastNonNullIndex], lastRank]
-    );
+    const pixel = chart.convertToPixel({ xAxisIndex: 0, yAxisIndex: 0 }, [years[lastNonNullIndex], lastRank]);
     if (!pixel) return;
 
     graphicElements.push({
@@ -167,13 +163,7 @@ const handleChartReady = (chart: ECharts) => {
 };
 
 const BumpChart = () => {
-  return (
-    <ReactECharts
-      option={option}
-      style={{ height: '640px', width: '100%' }}
-      onChartReady={handleChartReady}
-    />
-  );
+  return <ReactECharts option={option} style={{ height: '640px', width: '100%' }} onChartReady={handleChartReady} />;
 };
 
 export default BumpChart;
