@@ -67,7 +67,7 @@ const generateSeriesList = (rankingMap: RankingMap): SeriesOption[] => {
         fontSize: 11
       },
       lineStyle: {
-        width: 4
+        width: 3
       },
       connectNulls: false,
       data
@@ -94,7 +94,7 @@ const option: EChartsOption = {
     left: 30,
     right: 100,
     bottom: 60,
-    top: 60,
+    top: 90,
     containLabel: true
   },
   xAxis: {
@@ -128,7 +128,7 @@ const addNameLabels = (chart: ECharts) => {
   const graphicElements: object[] = [];
 
   rankingMap.forEach((data, name) => {
-    const color = CHARACTER_COLORS[name];
+    const _color = CHARACTER_COLORS[name];
     const lastNonNullIndex = data.reduce<number>((li, v, i) => (v !== null ? i : li), -1);
     const lastRank = data[lastNonNullIndex];
 
@@ -146,8 +146,12 @@ const addNameLabels = (chart: ECharts) => {
         y: pixel[1] + 20,
         textAlign: 'center',
         textVerticalAlign: 'top',
-        fill: color ?? '#333',
-        font: '10px sans-serif'
+        fill: '#595757',
+        font: 'bold 12px sans-serif',
+        textShadowColor: 'rgba(0,0,0,0.6)',
+        textShadowBlur: 4,
+        textShadowOffsetX: 1,
+        textShadowOffsetY: 1
       }
     });
   });
@@ -163,7 +167,8 @@ const handleChartReady = (chart: ECharts) => {
 };
 
 const BumpChart = () => {
-  return <ReactECharts option={option} style={{ height: '640px', width: '100%' }} onChartReady={handleChartReady} />;
+  // 685px=全部で10位なので9間隔,9*5=45px
+  return <ReactECharts option={option} style={{ height: '685px', width: '100%' }} onChartReady={handleChartReady} />;
 };
 
 export default BumpChart;
