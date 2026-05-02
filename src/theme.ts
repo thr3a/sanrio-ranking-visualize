@@ -10,10 +10,10 @@ export const vars = themeToVars(theme);
 
 export const cssVariablesResolver: CSSVariablesResolver = () => ({
   variables: {
-    '--mantine-color-body': '#f0f9fa'
+    '--mantine-color-body': '#fff0f6'
   },
   light: {
-    '--mantine-color-body': '#f0f9fa'
+    '--mantine-color-body': '#fff0f6'
   },
   dark: {}
 });

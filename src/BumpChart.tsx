@@ -81,7 +81,7 @@ const rankingMap = buildRankingMap();
 
 const option: EChartsOption = {
   title: {
-    text: 'サンリオキャラクター大賞 順位推移',
+    text: 'サンリオキャラクター大賞 順位推移グラフ',
     left: 'center',
     textStyle: {
       fontSize: 20
@@ -128,7 +128,7 @@ const addNameLabels = (chart: ECharts) => {
   const graphicElements: object[] = [];
 
   rankingMap.forEach((data, name) => {
-    const _color = CHARACTER_COLORS[name];
+    // const _color = CHARACTER_COLORS[name];
     const lastNonNullIndex = data.reduce<number>((li, v, i) => (v !== null ? i : li), -1);
     const lastRank = data[lastNonNullIndex];
 
