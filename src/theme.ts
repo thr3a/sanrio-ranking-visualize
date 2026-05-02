@@ -1,4 +1,4 @@
-import { createTheme } from '@mantine/core';
+import { type CSSVariablesResolver, createTheme } from '@mantine/core';
 import { themeToVars } from '@mantine/vanilla-extract';
 
 export const theme = createTheme({
@@ -7,3 +7,13 @@ export const theme = createTheme({
   fontFamily: '"Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif'
 });
 export const vars = themeToVars(theme);
+
+export const cssVariablesResolver: CSSVariablesResolver = () => ({
+  variables: {
+    '--mantine-color-body': '#f0f9fa'
+  },
+  light: {
+    '--mantine-color-body': '#f0f9fa'
+  },
+  dark: {}
+});
